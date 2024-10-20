@@ -8,6 +8,7 @@ import UserModule from '../user/user.module';
 import ApiDocModule from '../doc/api.doc.module';
 import AgendaModule from '../agenda/agenda.module';
 import JobsModule from '../jobs/jobs.module';
+import WeatherForeCastModule from '../weather-forecast/weather.forecast.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import JobsModule from '../jobs/jobs.module';
     LogModule,
     MongoConnectionModule,
     SqlConnectionModule,
-    UserModule
+    UserModule,
+    WeatherForeCastModule
   ],
 })
 export class AppModule {}
