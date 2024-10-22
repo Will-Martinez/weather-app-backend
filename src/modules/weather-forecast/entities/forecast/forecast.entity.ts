@@ -5,7 +5,8 @@ import {
     DataType,
     PrimaryKey, 
     AutoIncrement,
-    AllowNull
+    AllowNull,
+    Default
  } from "sequelize-typescript";
 
 @Table({
@@ -14,14 +15,14 @@ import {
 export default class ForecastModel extends Model
 {
     @PrimaryKey
-    @AutoIncrement
     @AllowNull(false)
-    @Column
-    id?: number;
+    @Default(DataType.UUIDV4)
+    @Column(DataType.UUID)
+    uuid!: string;
 
     @AllowNull(false)
     @Column(DataType.DATE)
-    modelRunUpdateTimeUtc!: Date;
+    modelrun_updatetime_utc!: Date;
 
     @AllowNull(true)
     @Column(DataType.STRING)
@@ -31,9 +32,17 @@ export default class ForecastModel extends Model
     @Column(DataType.FLOAT)
     height!: number;
 
+    @AllowNull(true)
+    @Column(DataType.STRING)
+    timezone_abbrevation: string
+
     @AllowNull(false)
     @Column(DataType.FLOAT)
     latitude!: number;
+
+    @AllowNull(false)
+    @Column(DataType.DATE)
+    modelrun_utc: Date;
 
     @AllowNull(false)
     @Column(DataType.FLOAT)
@@ -41,43 +50,11 @@ export default class ForecastModel extends Model
 
     @AllowNull(false)
     @Column(DataType.INTEGER)
-    utcTimeOffSet!: number;
+    utc_timeoffset!: number;
 
     @AllowNull(false)
     @Column(DataType.FLOAT)
-    generationTimeMs!: number;
-
-    @AllowNull(false)
-    @Column(DataType.STRING)
-    precipitationUnit!: string;
-
-    @AllowNull(false)
-    @Column(DataType.STRING)
-    windSpeedUnit!: string;
-
-    @AllowNull(false)
-    @Column(DataType.STRING)
-    precipitationProbabilityUnit!: string;
-
-    @AllowNull(false)
-    @Column(DataType.STRING)
-    relativeHumidityUnit!: string;
-
-    @AllowNull(false)
-    @Column(DataType.STRING)
-    temperatureUnit!: string;
-
-    @AllowNull(false)
-    @Column(DataType.STRING)
-    timeUnit!: string;
-
-    @AllowNull(false)
-    @Column(DataType.STRING)
-    pressureUnit!: string;
-
-    @AllowNull(false)
-    @Column(DataType.STRING)
-    windDirectionUnit!: string;
+    generation_time_ms!: number;
 
     @AllowNull(false)
     @Column(DataType.JSON)
@@ -85,11 +62,11 @@ export default class ForecastModel extends Model
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    snowFraction!: object;
+    snowfraction!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    windSpeed!: object;
+    windspeed!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
@@ -97,45 +74,45 @@ export default class ForecastModel extends Model
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    precipitationProbability!: object;
+    precipitation_probability!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    convectivePrecipitation!: object;
+    convective_precipitation!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    rainSpot!: object;
+    rainspot!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    picToCode!: object;
+    pictocode!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    feltTemperature!: object;
+    felttemperature!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    precipiration!: object;
+    precipitation!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    isDayLight!: object;
+    isdaylight!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    uvIndex!: object;
+    uvindex!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    relativeHumidity!: object;
+    relativehumidity!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    seaLevelPressure!: object;
+    sealevelpressure!: object;
 
     @AllowNull(false)
     @Column(DataType.JSON)
-    windDirection!: object;
+    winddirection!: object;
 }

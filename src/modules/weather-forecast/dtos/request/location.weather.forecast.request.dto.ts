@@ -12,4 +12,20 @@ export default class LocationWeatherForecastRequestDto
         type: String
     })
     location: string
+
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({
+        description: "Location country",
+        type: String
+    })
+    country: string
+
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({
+        description: "Country state/county/district",
+        type: String
+    })
+    state: string
 }

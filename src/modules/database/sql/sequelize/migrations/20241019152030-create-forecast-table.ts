@@ -4,13 +4,13 @@ import { QueryInterface, DataTypes } from "sequelize";
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
     return await queryInterface.createTable("forecast", {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        allowNull: false
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true
       },
-      modelRunUpdateTimeUtc: {
+      modelrun_updatetime_utc: {
         type: DataTypes.DATE,
         allowNull: false
       },
@@ -22,63 +22,39 @@ module.exports = {
         type: DataTypes.FLOAT,
         allowNull: false
       },
+      timezone_abbrevation: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       latitude: {
         type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      modelrun_utc: {
+        type: DataTypes.DATE,
         allowNull: false
       },
       longitude: {
         type: DataTypes.FLOAT,
         allowNull: false
       },
-      utcTimeOffSet: {
+      utc_timeoffset: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      generationTimeMs: {
+      generation_time_ms: {
         type: DataTypes.FLOAT,
-        allowNull: false
-      },
-      precipitationUnit: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      windSpeedUnit: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      precipitationProbabilityUnit: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      relativeHumidityUnit: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      temperatureUnit: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      timeUnit: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      pressureUnit: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      windDirectionUnit: {
-        type: DataTypes.STRING,
         allowNull: false
       },
       time: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      snowFraction: {
+      snowfraction: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      windSpeed: {
+      windspeed: {
         type: DataTypes.JSON,
         allowNull: false
       },
@@ -86,47 +62,47 @@ module.exports = {
         type: DataTypes.JSON,
         allowNull: false
       },
-      precipitationProbability: {
+      precipitation_probability: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      convectivePrecipitation: {
+      convective_precipitation: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      rainSpot: {
+      rainspot: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      picToCode: {
+      pictocode: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      feltTemperature: {
+      felttemperature: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      precipiration: {
+      precipitation: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      isDayLight: {
+      isdaylight: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      uvIndex: {
+      uvindex: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      relativeHumidity: {
+      relativehumidity: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      seaLevelPressure: {
+      sealevelpressure: {
         type: DataTypes.JSON,
         allowNull: false
       },
-      windDirection: {
+      winddirection: {
         type: DataTypes.JSON,
         allowNull: false
       },

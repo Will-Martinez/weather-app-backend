@@ -13,13 +13,22 @@ export default class LocationForecastRelationRepository
         private readonly locationForecastRelationModel: typeof LocationForecastRelationModel
     ) {}
 
-    public async getLocationForecastRelationById(id: number): Promise<LocationForecastRelationModel>
+    public async getLocationForecastRelationById(locationId: string, forecastId: string): Promise<LocationForecastRelationModel>
     {
-        return await this.locationForecastRelationModel.findByPk(id, {
+        return await this.locationForecastRelationModel.findOne({
+            where: { locationId, forecastId },
             include: [
                 { model: LocationModel },
                 { model: ForecastModel }
             ]
         });
+    }
+
+    public async createLocationForecastRelation(locationId: string, forecastId: string): Promise<LocationForecastRelationModel>
+    {
+        return await this.locationForecastRelationModel.create({
+            locationId,
+            forecastId
+        })
     }
 }

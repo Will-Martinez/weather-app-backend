@@ -7,7 +7,9 @@ module.exports = {
       {
         userName: "Admin",
         email: "admin@admin.com",
-        password: await argon2.hash(process.env.USER_ADMIN_PASSWORD)
+        password: await argon2.hash(process.env.USER_ADMIN_PASSWORD),
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ]);
   },

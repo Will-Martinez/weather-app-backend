@@ -17,8 +17,8 @@ module.exports = {
         onUpdate: "CASCADE"
       },
       forecastId: {
-        type: DataTypes.INTEGER,
-        references: { model: "forecast", key: "id" },
+        type: DataTypes.UUID,
+        references: { model: "forecast", key: "uuid" },
         allowNull: false,
         onDelete: "CASCADE",
         onUpdate: "CASCADE"

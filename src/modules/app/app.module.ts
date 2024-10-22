@@ -9,11 +9,16 @@ import ApiDocModule from '../doc/api.doc.module';
 import AgendaModule from '../agenda/agenda.module';
 import JobsModule from '../jobs/jobs.module';
 import WeatherForeCastModule from '../weather-forecast/weather.forecast.module';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
     ApiDocModule,
     AgendaModule,
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+  }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `${process.cwd()}/config/env/${process.env.NODE_ENV}.env`,

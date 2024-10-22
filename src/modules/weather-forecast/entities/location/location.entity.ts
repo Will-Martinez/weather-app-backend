@@ -1,3 +1,4 @@
+import { IsNotEmpty, IsString } from "class-validator";
 import { 
     Table, 
     Model, 
@@ -18,6 +19,12 @@ export default class LocationModel extends Model
     @Default(DataType.UUIDV4)
     @Column(DataType.UUID)
     uuid!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    name: string
 
     @AllowNull(false)
     @Column(DataType.STRING)

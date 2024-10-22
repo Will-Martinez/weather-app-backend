@@ -29,7 +29,8 @@ export default class JobsService {
 
             this.logService.log(
                 JobsService.name,
-                `A new job was created with name '${jobName}'`
+                `A new job was created with name '${jobName}'`,
+                null
             );
         } catch (error) {
             this.logService.error(
@@ -37,7 +38,7 @@ export default class JobsService {
                 error.message,
                 null
             );
-            throw error;
+            return
         }
     }
 }

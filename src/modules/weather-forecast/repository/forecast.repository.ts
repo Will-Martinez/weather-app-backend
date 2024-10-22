@@ -10,10 +10,15 @@ export default class ForecastRepository
         private readonly forecastModel: typeof ForecastModel
     ) {}
 
-    public async getAllForecastsByGeoLocation(lat: number, lon: number): Promise<ForecastModel[]>
+    public async getAllForecastsByLocationName(locationName: string): Promise<ForecastModel>
     {
-        return await this.forecastModel.findAll({
-            where: { lat, lon }
-        });
+    return await ForecastModel.findOne({
+        where: { name: locationName }
+    });
+    }
+
+    public async createWeatherForecast(weatherForecast: Partial<ForecastModel>): Promise<ForecastModel>
+    {
+        return await this.forecastModel.create(weatherForecast);
     }
 }
