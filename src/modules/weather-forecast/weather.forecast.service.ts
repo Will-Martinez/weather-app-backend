@@ -218,38 +218,36 @@ export default class WeatherForeCastService {
 
     private async flattenResponse(response: AxiosResponse) {
         try {
-            // Verifica se a resposta é válida
             if (!response || !response.data) {
                 throw new Error('Invalid response');
             }
 
             const flattenedResponse = {};
-            const seenObjects = new WeakSet(); // Para evitar referências circulares
+            const seenObjects = new WeakSet();
 
             function flatten(obj, parentKey = '') {
-                // Verifica se o objeto já foi visto
                 if (seenObjects.has(obj)) {
-                    return; // Evita loops infinitos
+                    return;
                 }
 
                 seenObjects.add(obj);
 
                 for (let key in obj) {
                     if (key === 'units') {
-                        continue; // Ignora a chave 'units'
+                        continue;
                     }
 
                     if (Array.isArray(obj[key])) {
                         flattenedResponse[key] = obj[key];
                     } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-                        flatten(obj[key], `${key}`); // Chama recursivamente
+                        flatten(obj[key], `${key}`);
                     } else {
                         flattenedResponse[key] = obj[key];
                     }
                 }
             }
 
-            flatten(response.data); // Certifique-se de aplanar response.data, não a resposta inteira
+            flatten(response.data);
             return flattenedResponse;
         } catch (error) {
             this.logService.error(
