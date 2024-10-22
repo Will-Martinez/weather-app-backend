@@ -37,7 +37,7 @@ export default class UserService
                 "Failed trying to create a new user.",
                 error
             );
-            throw new InternalServerErrorException(error.message);
+            return
         }
     }
 
@@ -61,7 +61,7 @@ export default class UserService
                 "Failed trying to create a new user.",
                 error
             );
-            throw new InternalServerErrorException(error.message);
+            return
         }
     }
 }

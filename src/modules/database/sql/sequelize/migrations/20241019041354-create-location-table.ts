@@ -9,6 +9,10 @@ module.exports = {
         allowNull: false,
         primaryKey: true
       },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       iso2: {
         type: DataTypes.STRING,
         allowNull: false,
