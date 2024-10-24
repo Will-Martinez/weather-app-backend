@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize-typescript';
-import UserModel from 'src/modules/user/entities/user.entity';
 import LocationModel from 'src/modules/weather-forecast/entities/location/location.entity';
 import ForecastModel from 'src/modules/weather-forecast/entities/forecast/forecast.entity';
 import LocationForecastRelationModel from 'src/modules/weather-forecast/entities/location-forecast-relation/location.forecast.relation.entity';
@@ -18,7 +17,6 @@ export const sqlConnectionProvider = [
         logging: false
       });
       sequelize.addModels([
-        UserModel,
         ForecastModel,
         LocationForecastRelationModel,
         LocationModel
