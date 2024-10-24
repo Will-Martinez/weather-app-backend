@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import ForecastRepository from "./repository/forecast.repository";
 import { ConfigService } from "@nestjs/config";
 import LogService from "../log/log.service";
@@ -16,13 +16,14 @@ import { Mapper } from "@automapper/core";
 import ForecastModel from "./entities/forecast/forecast.entity";
 import LocationForecastRelationModel from "./entities/location-forecast-relation/location.forecast.relation.entity";
 import LocationForecastRelationRepository from "./repository/location.forecast.relation.repository";
+import LocationsDataResponseDto from "./dtos/response/locations.data.response.dto";
 
 
 @Injectable()
 export default class WeatherForeCastService {
     constructor(
-        /* @InjectMapper()
-        private readonly mapper: Mapper, */
+        @InjectMapper()
+        private readonly mapper: Mapper,
         private readonly configService: ConfigService,
         private readonly foreCastRepository: ForecastRepository,
         private readonly locationRepository: LocationRepository,
@@ -33,7 +34,7 @@ export default class WeatherForeCastService {
 
     public async fetchLocationWeatherForecast(
         locationWeatherForecastRequestDto: LocationWeatherForecastRequestDto
-    ): Promise<ForecastModel> { // o correto seria retornar o dto, mas parece que o mapper não está funcionando da forma que eu gostaria
+    ): Promise<LocationWeatherForecastResponseDto> {
         try {
             const location: LocationModel = await this.locationRepository.getLocationByName(
                 locationWeatherForecastRequestDto.location
@@ -60,15 +61,83 @@ export default class WeatherForeCastService {
                 null
             );
 
-            return weatherForecast.dataValues;
+            return weatherForecast.dataValues
+            // return this.mapper.map(weatherForecast.dataValues, ForecastModel, LocationWeatherForecastResponseDto);
 
         } catch (error) {
             this.logService.error(
                 WeatherForeCastService.name,
-                error.message,
-                error
+                `Internal server error: ${error.message}`,
             );
-            return
+            throw error;
+        }
+    }
+
+    public async fetchLocationWeatherByGeolocation(
+        geoLocationWeatherForecastRequestDto: GeolocationWeatherForecastRequestDto
+    ): Promise<LocationWeatherForecastResponseDto[]>
+    {
+        try {
+            const lat: number = geoLocationWeatherForecastRequestDto.lat;
+            const lon: number = geoLocationWeatherForecastRequestDto.lon;
+            const meteoBlueApi: string = this.configService.get("METEO_BLUE_API_LOCATION_INFORMATION");
+            const meteoBlueApiKey: string = this.configService.get("METEO_BLUE_API_KEY");
+            const url: string = `${meteoBlueApi}/en/server/search/query3?query=${lat.toString()}%20${lon.toString()}&apikey=${meteoBlueApiKey}.`;
+            let newLocationWeatherForecasts: LocationWeatherForecastResponseDto[] = [];
+
+            const response: AxiosResponse = await lastValueFrom(
+                this.httpService.get(url, {})
+            );
+
+            if (!response.data || response.status == 404 || !Array.isArray(response.data.results))
+            {
+                throw new NotFoundException(`The are no locations near the geolocation with lat ${lat} and lon ${lon}`);
+            }
+
+            for (const location of response.data.results as LocationModel[])
+            {
+                const isLocationExists: LocationModel = await this.locationRepository.getLocationByName(location.name);
+                
+                if (!isLocationExists)
+                {
+                    this.logService.log(
+                        WeatherForeCastService.name,
+                        `Location with name ${location.name} is not registered in database. Registering a new one.`
+                    );
+                    const newLocation: LocationModel = await this.locationRepository.createLocationInformation(location);
+
+                    this.logService.log(
+                        WeatherForeCastService.name,
+                        `A new location was registered in database with name ${newLocation.name}`
+                    );
+
+                    this.logService.log(
+                        WeatherForeCastService.name,
+                        `Creating or searching for existing weather forecast for location with name ${newLocation.name}`
+                    );
+
+                    
+                    const newLocationWeatherForecast: LocationWeatherForecastResponseDto = await this.handleWeatherForecast(newLocation);
+                    newLocationWeatherForecasts.push(newLocationWeatherForecast);
+
+                    continue;
+                }
+
+                this.logService.log(
+                    WeatherForeCastService.name,
+                    `Location with name ${location.name} is already registered in database.`,
+                );
+
+                continue;
+            }
+
+            return newLocationWeatherForecasts;
+        } catch (error) {
+            this.logService.error(
+                WeatherForeCastService.name,
+                `Internal server error: ${error.message}`,
+            );
+            throw error;
         }
     }
 
@@ -81,16 +150,34 @@ export default class WeatherForeCastService {
         } catch (error) {
             this.logService.error(
                 WeatherForeCastService.name,
-                error.message,
-                error
+                `Internal server error: ${error.message}`,
             );
-            return
+            throw error;
+        }
+    }
+
+    public async listLocations(): Promise<LocationsDataResponseDto[]>
+    {
+        try {
+            const locations: LocationModel[] = await this.locationRepository.listAllLocations();
+            if (!locations || locations.length == 0)
+            {
+                throw new NotFoundException("Locations data not found.");
+            }
+
+            return this.mapper.mapArray(locations, LocationModel, LocationsDataResponseDto)
+        } catch (error) {
+            this.logService.error(
+                WeatherForeCastService.name,
+                `Internal server error: ${error.message}`,
+            );
+            throw error;
         }
     }
 
     private async handleLocation(
         locationWeatherForecastRequestDto: LocationWeatherForecastRequestDto
-    ): Promise<ForecastModel> {
+    ): Promise<LocationWeatherForecastResponseDto> {
         this.logService.log(
             WeatherForeCastService.name,
             "Location dont exist in database."
@@ -154,8 +241,8 @@ export default class WeatherForeCastService {
                 WeatherForeCastService.name,
                 `New weather forecast and relation create for location ${newLocation.name}`,
             );
-
-            return newWeatherForecast
+            // return newWeatherForecast
+            return this.mapper.map(newLocation, LocationModel, LocationWeatherForecastResponseDto)
         }
 
         await this.locationForecastRelationRepository.createLocationForecastRelation(
@@ -168,12 +255,13 @@ export default class WeatherForeCastService {
             `New weather forecast and relation create for location ${newLocation.name}`,
         );
 
-        return newWeatherForecast
+        return this.mapper.map(newWeatherForecast, ForecastModel, LocationWeatherForecastResponseDto)
+        // return newWeatherForecast
     }
 
     private async handleWeatherForecast(
         location: LocationModel
-    ): Promise<ForecastModel> 
+    ): Promise<LocationWeatherForecastResponseDto> 
     {
         const meteoBlueApi: string = this.configService.get("METEO_BLUE_API_FORECAST_INFORMATION");
         const meteoBlueApiKey: string = this.configService.get("METEO_BLUE_API_KEY");
@@ -181,10 +269,11 @@ export default class WeatherForeCastService {
         const response: AxiosResponse = await lastValueFrom(
             this.httpService.get(url, {})
         );
+        response.data.metadata.name = location.name;
 
-        const flatResponse: any = await this.flattenResponse(response.data);
+        const flatResponse: any = await this.flattenResponse(response);
         flatResponse.name = location.name;
-        const newWeatherForecast = await this.foreCastRepository.createWeatherForecast(flatResponse);
+        const newWeatherForecast: ForecastModel = await this.foreCastRepository.createWeatherForecast(flatResponse);
 
         const isLocationForecastRelationExists: LocationForecastRelationModel = await this.locationForecastRelationRepository.getLocationForecastRelationById(
             location.uuid,
@@ -196,12 +285,8 @@ export default class WeatherForeCastService {
                 WeatherForeCastService.name,
                 "A new relation between location and forecast will not be created. Relation already exists"
             );
-
-            this.logService.log(
-                WeatherForeCastService.name,
-                `New weather forecast and relation create for location ${location.name}`
-            );
-            return newWeatherForecast;
+            // return newWeatherForecast
+            return this.mapper.map(newWeatherForecast, ForecastModel, LocationWeatherForecastResponseDto)
         }
 
         await this.locationForecastRelationRepository.createLocationForecastRelation(
@@ -213,7 +298,8 @@ export default class WeatherForeCastService {
             WeatherForeCastService.name,
             `New weather forecast and relation create for location ${location.name}`
         );
-        return newWeatherForecast;
+        // return newWeatherForecast
+        return this.mapper.map(newWeatherForecast, ForecastModel, LocationWeatherForecastResponseDto)
     }
 
     private async flattenResponse(response: AxiosResponse) {

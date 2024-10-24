@@ -1,7 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsString, IsUUID, IsOptional } from "class-validator";
+import { AutoMap } from "@automapper/classes";
 
 export default class LocationWeatherForecastResponseDto {
+    @AutoMap()
     @IsUUID()
     @IsOptional()
     @ApiProperty({
@@ -10,6 +12,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     uuid: string;
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -18,6 +21,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     name: string
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -26,6 +30,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     iso2: string;
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -34,6 +39,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     country: string;
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -42,6 +48,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     admin1: string;
 
+    @AutoMap()
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({
@@ -50,6 +57,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     lat: number;
 
+    @AutoMap()
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({
@@ -58,6 +66,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     lon: number;
 
+    @AutoMap()
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({
@@ -66,6 +75,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     asl: number;
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -74,6 +84,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     timezone: string;
 
+    @AutoMap()
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({
@@ -82,6 +93,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     population: number;
 
+    @AutoMap()
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({
@@ -90,6 +102,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     distance: number;
 
+    @AutoMap()
     @IsString()
     @IsOptional()
     @ApiProperty({
@@ -99,6 +112,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     icao?: string;
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -107,6 +121,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     iata: string;
 
+    @AutoMap()
     @IsNotEmpty()
     @ApiProperty({
         description: "Postcodes for the location",
@@ -114,6 +129,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     postcodes: object;
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -122,6 +138,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     featureClass: string;
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -130,6 +147,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     featureCode: string;
 
+    @AutoMap()
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -138,6 +156,7 @@ export default class LocationWeatherForecastResponseDto {
     })
     url: string;
 
+    @AutoMap()
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({

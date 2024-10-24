@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
-
+import { AutoMap } from "@automapper/classes";
 
 
 export default class GeolocationWeatherForecastRequestDto
@@ -9,15 +9,17 @@ export default class GeolocationWeatherForecastRequestDto
     @IsNotEmpty()
     @ApiProperty({
         description: "Latitude",
-        type: String
+        type: Number
     })
-    lat: string
+    @AutoMap()
+    lat: number
 
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({
         description: "Longitude",
-        type: String
+        type: Number
     })
-    lon: string
+    @AutoMap()
+    lon: number
 }

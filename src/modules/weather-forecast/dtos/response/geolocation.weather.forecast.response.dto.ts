@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsOptional, IsNumber, IsString, IsArray, IsUUID } from "class-validator";
+import { AutoMap } from "@automapper/classes";
 
 export default class GeolocationWeatherForecastResponseDto {
     @IsUUID()
@@ -8,6 +9,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Unique identifier for the location",
         type: String
     })
+    @AutoMap()
     uuid: string;
 
     @IsNotEmpty()
@@ -15,6 +17,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "UTC time when the forecast model was updated",
         type: Date
     })
+    @AutoMap()
     modelrun_updatetime_utc: Date;
 
     @IsString()
@@ -24,6 +27,7 @@ export default class GeolocationWeatherForecastResponseDto {
         type: String,
         required: false
     })
+    @AutoMap()
     name?: string;
 
     @IsNumber()
@@ -32,6 +36,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Height of the forecast location",
         type: Number
     })
+    @AutoMap()
     height: number;
 
     @IsString()
@@ -40,6 +45,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Time zone abbreviation",
         type: String
     })
+    @AutoMap()
     timezone_abbrevation: string
 
     @IsNumber()
@@ -48,6 +54,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Latitude of the forecast location",
         type: Number
     })
+    @AutoMap()
     latitude: number;
 
     @IsNotEmpty()
@@ -55,6 +62,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "UTC time model",
         type: Date
     })
+    @AutoMap()
     modelrun_utc: Date
 
     @IsNumber()
@@ -63,6 +71,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Longitude of the forecast location",
         type: Number
     })
+    @AutoMap()
     longitude: number;
 
     @IsNumber()
@@ -71,6 +80,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "UTC offset in hours",
         type: Number
     })
+    @AutoMap()
     utc_timeoffset: number;
 
     @IsNumber()
@@ -79,6 +89,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Time taken to generate the forecast in milliseconds",
         type: Number
     })
+    @AutoMap()
     generation_time_ms: number;
 
     @IsArray()
@@ -87,6 +98,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of time values for the forecast",
         type: [String]
     })
+    @AutoMap()
     time: string[];
 
     @IsArray()
@@ -95,6 +107,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of snow fraction data",
         type: [Number]
     })
+    @AutoMap()
     snowfraction: number[];
 
     @IsArray()
@@ -103,6 +116,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of wind speed values",
         type: [Number]
     })
+    @AutoMap()
     windspeed: number[];
 
     @IsArray()
@@ -111,6 +125,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of temperature values",
         type: [Number]
     })
+    @AutoMap()
     temperature: number[];
 
     @IsArray()
@@ -119,6 +134,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of precipitation probability values",
         type: [Number]
     })
+    @AutoMap()
     precipitation_probability: number[];
 
     @IsArray()
@@ -127,6 +143,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of convective precipitation data",
         type: [Number]
     })
+    @AutoMap()
     convective_precipitation: number[];
 
     @IsArray()
@@ -135,6 +152,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of rain spot data",
         type: [String]
     })
+    @AutoMap()
     rainspot: string[];
 
     @IsArray()
@@ -143,6 +161,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of pic-to-code data",
         type: [Number]
     })
+    @AutoMap()
     pictocode: number[];
 
     @IsArray()
@@ -151,6 +170,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of felt temperature data",
         type: [Number]
     })
+    @AutoMap()
     felttemperature: number[];
 
     @IsArray()
@@ -159,6 +179,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of precipitation data",
         type: [Number]
     })
+    @AutoMap()
     precipitation: number[];
 
     @IsArray()
@@ -167,6 +188,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of daylight information (whether it's daylight or not)",
         type: [Number]
     })
+    @AutoMap()
     isdaylight: number[];
 
     @IsArray()
@@ -175,6 +197,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of UV index values",
         type: [Number]
     })
+    @AutoMap()
     uvindex: number[];
 
     @IsArray()
@@ -183,6 +206,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of relative humidity data",
         type: [Number]
     })
+    @AutoMap()
     relativehumidity: number[];
 
     @IsArray()
@@ -191,6 +215,7 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of sea level pressure data",
         type: [Number]
     })
+    @AutoMap()
     sealevelpressure: number[];
 
     @IsArray()
@@ -199,5 +224,6 @@ export default class GeolocationWeatherForecastResponseDto {
         description: "Array of wind direction data",
         type: [Number]
     })
+    @AutoMap()
     winddirection: number[];
 }
