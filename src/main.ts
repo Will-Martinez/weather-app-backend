@@ -4,9 +4,10 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import ApiDocService from './modules/doc/api.doc.service';
 import * as cookieParser from "cookie-parser";
 import AgendaService from './modules/agenda/agenda.service';
+import JobsService from './modules/jobs/jobs.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   configureAppMiddleWares(app);
   startApiDoc(app);
@@ -30,7 +31,12 @@ function startApiDoc(app: INestApplication)
 function startAgendaJobs(app: INestApplication)
 {
   const agendaService: AgendaService = app.get(AgendaService);
-  agendaService.startAgendaJobs();
+  agendaService.startAgendaJobs()
+
+  setTimeout(async () => {
+    const jobsService: JobsService = app.get(JobsService);
+    jobsService.startAutomatedWeatherForecastFetcher();
+  }, 3000);
 }
 
 bootstrap();

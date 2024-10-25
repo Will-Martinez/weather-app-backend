@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";
-import AuthDto from "./dtos/auth.dto";
 
 
 @Injectable()
@@ -13,11 +12,11 @@ export default class AuthService {
     ) {}
 
     public signToken(
-        authDto: AuthDto,
-        res: Response): { access_token: string, refresh_token: string } {
+        userId: number,
+        email: string): { access_token: string, refresh_token: string } {
         const payload = {
-            sub: authDto.userId,
-            email: authDto.email
+            sub: userId,
+            email: email
         };
 
         const access_token: string = this.jwtService.sign(
@@ -36,7 +35,7 @@ export default class AuthService {
             }
         );
 
-        res.cookie("access_token", access_token, {
+        /* res.cookie("access_token", access_token, {
             httpOnly: true,
             secure: true,
             maxAge: 30 * 60 * 1000 // 30m
@@ -46,7 +45,7 @@ export default class AuthService {
             httpOnly: true,
             secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7d
-        });
+        }); */
 
         access_token.toString();
         refresh_token.toString();

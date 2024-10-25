@@ -10,9 +10,9 @@ export default class LogService {
         obj: object = null
     ) {
         if (obj)
-            this.logger.log(`[${context}] - ${message} - ${obj}`);
+            this.logger.log(message, context, obj);
 
-        this.logger.log(`[${context}] - ${message}`);
+        this.logger.log(message, context);
     }
 
     public error(
@@ -21,8 +21,8 @@ export default class LogService {
         obj: object = null
     ) {
         if (obj)
-            this.logger.error(`[${context}] - ${message} - ${obj}`);
+            this.logger.log(message, context, obj);
 
-        this.logger.error(`[${context}] - ${message}`);
+        this.logger.log(message, context);
     }
 }
