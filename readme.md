@@ -16,6 +16,7 @@ Aplicação web para exibição de dados de previsão do tempo em diversas local
 
 ## Como inciar o backend
 - Primeiro, é necessário configurar um arquivo de ambiente e obrigatoriamente, precisa ter o nome de development, production ou homolog(todos de extensão .env) conforme print abaixo:
+  
     ![image](./repo-prints/env_files.PNG)
 
 - Em seguida, siga o exemplo que está dentro da pasta de env(enviroment.example.env) para montar as variáveis de ambiente. A única variável de ambiente não obrigatória
