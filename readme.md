@@ -8,7 +8,7 @@ Aplicação web para exibição de dados de previsão do tempo em diversas local
 - Segue links abaixo para instalação caso necessário:
     - Nodejs: https://nodejs.org/en/download/prebuilt-installer
     - MySQL: https://dev.mysql.com/downloads/mysql/
-    - MongoDB: https://www.mongodb.com/try/download/community
+    - MongoDB: https://www.mongodb.com/try/download/community(usado para armazenar o registro de rotinas executadas pelo agendajs)
 
 - Como ferramentas opcionais, pode instalar uma das opções de SGBD para os bancos de dados:
     - Mysql Workbench: https://dev.mysql.com/downloads/workbench/
