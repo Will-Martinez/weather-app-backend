@@ -6,7 +6,7 @@ export default class ApiDocService {
     public setupSwagger(app: INestApplication): void {
         const config = new DocumentBuilder()
             .setTitle("API DOC")
-            .setDescription("App api doc for the payment micro-service using efi bank api's.")
+            .setDescription("Weather App API's doc")
             .setVersion("1.0")
             .addApiKey()
             .build();
