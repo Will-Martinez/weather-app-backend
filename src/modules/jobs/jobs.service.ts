@@ -41,10 +41,85 @@ export default class JobsService {
             this.agenda = this.agendaService.getCurrentAgendaInstance();
 
             this.agenda.define("Automated weather forecast fetcher", async (job) => {
-                await this.readLocationsFromDatabaseAndUpdateWeatherForecast();
+                const meteoBlueApi: string = this.configService.get("METEO_BLUE_API_FORECAST_INFORMATION");
+                const meteoBlueApiKey: string = this.configService.get("METEO_BLUE_API_KEY");
+
+                const locations: LocationModel[] = await this.locationRepository.listAllLocations();
+                if (!locations || locations.length == 0) {
+                    this.logService.log(
+                        JobsService.name,
+                        `No location found in database, waiting 5 minutes to search again.`
+                    );
+                    return;
+                }
+
+                this.logService.log(
+                    JobsService.name,
+                    `Found ${locations.length} locations, updating weather forecast.`
+                );
+
+                for (const location of locations as LocationModel[]) {
+                    const url: string = `${meteoBlueApi}/packages/basic-1h?lat=${location.lat}&lon=${location.lon}&apikey=${meteoBlueApiKey}`;
+                    const response: AxiosResponse = await lastValueFrom(
+                        this.httpService.get(url, {})
+                    );
+
+                    response.data.metadata.name = location.name;
+
+                    const flatResponse: any = await this.flattenResponse(response);
+                    flatResponse.name = location.name;
+
+                    const forecastExists: ForecastModel = await this.forecastRepository.getAllForecastsByLocationName(location.name);
+                    if (forecastExists)
+                    {
+                        this.logService.log(
+                            JobsService.name,
+                            `A forecast already exists for location ${location.name}. An weather forecast will be made.`
+                        );
+
+                        await this.forecastRepository.updateWeatherForecast(forecastExists.uuid, flatResponse);
+
+                        this.logService.log(
+                            JobsService.name,
+                            `Finished updating weather forecast for ${location.name}`
+                        );
+                        continue;
+                    }
+
+                    const newWeatherForecast: ForecastModel = await this.forecastRepository.createWeatherForecast(flatResponse);
+                    const isLocationForecastRelationExists: LocationForecastRelationModel = await this.locationForecastRelationRepository.getLocationForecastRelationById(
+                        location.uuid,
+                        newWeatherForecast.uuid
+                    );
+
+                    if (isLocationForecastRelationExists && isLocationForecastRelationExists != undefined) {
+                        this.logService.log(
+                            JobsService.name,
+                            "A new relation between location and forecast will not be created. Relation already exists"
+                        );
+                        continue;
+                    }
+
+                    await this.locationForecastRelationRepository.createLocationForecastRelation(
+                        location.uuid,
+                        newWeatherForecast.uuid
+                    );
+
+                    this.logService.log(
+                        JobsService.name,
+                        `New weather forecast and relation created for location ${location.name}`
+                    );
+                    continue;
+                }
+
+                this.logService.log(
+                    JobsService.name,
+                    `Finished updating weather forecast. Waiting ${this.configService.get("BACKGROUND_WEATHER_FORECAST_JOB_COOLDOWN")} to run again.`
+                );
+                return;
             });
 
-            await this.agenda.every("5 minutes", jobName);
+            await this.agenda.every(this.configService.get("BACKGROUND_WEATHER_FORECAST_JOB_COOLDOWN"), jobName);
         } catch (error) {
             this.logService.error(
                 JobsService.name,
@@ -52,62 +127,6 @@ export default class JobsService {
                 null
             );
             return
-        }
-    }
-
-    private async readLocationsFromDatabaseAndUpdateWeatherForecast(): Promise<void> {
-        const meteoBlueApi: string = this.configService.get("METEO_BLUE_API_FORECAST_INFORMATION");
-        const meteoBlueApiKey: string = this.configService.get("METEO_BLUE_API_KEY");
-
-        const locations: LocationModel[] = await this.locationRepository.listAllLocations();
-        if (!locations || locations.length == 0) {
-            this.logService.log(
-                JobsService.name,
-                `No location found in database, waiting 5 minutes to search again.`
-            );
-            return;
-        }
-
-        this.logService.log(
-            JobsService.name,
-            `Found ${locations.length} locations, updating weather forecast.`
-        );
-
-        for (const location of locations as LocationModel[]) {
-            const url: string = `${meteoBlueApi}/packages/basic-1h?lat=${location.lat}&lon=${location.lon}&apikey=${meteoBlueApiKey}`;
-            const response: AxiosResponse = await lastValueFrom(
-                this.httpService.get(url, {})
-            );
-
-            response.data.metadata.name = location.name;
-
-            const flatResponse: any = await this.flattenResponse(response);
-            flatResponse.name = location.name;
-            const newWeatherForecast: ForecastModel = await this.forecastRepository.createWeatherForecast(flatResponse);
-
-            const isLocationForecastRelationExists: LocationForecastRelationModel = await this.locationForecastRelationRepository.getLocationForecastRelationById(
-                location.uuid,
-                newWeatherForecast.uuid
-            );
-
-            if (isLocationForecastRelationExists && isLocationForecastRelationExists != undefined) {
-                this.logService.log(
-                    JobsService.name,
-                    "A new relation between location and forecast will not be created. Relation already exists"
-                );
-                return
-            }
-    
-            await this.locationForecastRelationRepository.createLocationForecastRelation(
-                location.uuid,
-                newWeatherForecast.uuid
-            );
-    
-            this.logService.log(
-                JobsService.name,
-                `New weather forecast and relation create for location ${location.name}`
-            );
-            return;
         }
     }
 
