@@ -15,6 +15,9 @@ Aplicação web para exibição de dados de previsão do tempo em diversas local
     - MongoDB Compass: https://www.mongodb.com/try/download/compass
 
 ## Como inciar o backend
+- Abra o terminal no diretório que foi clonado localmente, e execute "npm install --force". A flag --force precisa
+  ser usada para que a instalação da biblioteca Automapper seja instalada.
+
 - Primeiro, é necessário configurar um arquivo de ambiente e obrigatoriamente, precisa ter o nome de development, production ou homolog(todos de extensão .env) conforme print abaixo:
   
     ![image](./repo-prints/env_files.PNG)
