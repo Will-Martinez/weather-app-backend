@@ -33,8 +33,6 @@ function startAgendaJobs(app: INestApplication)
   const agendaService: AgendaService = app.get(AgendaService);
   agendaService.startAgendaJobs()
 
-  console.log("Agenda jobs: ", process.env.AGENDA_JOBS_ENABLED)
-
   if (process.env.AGENDA_JOBS_ENABLED == "true")
   {
     setTimeout(async () => {
